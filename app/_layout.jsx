@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
-import { AuthProvider } from './contexts/AuthContext';
-import { TicketProvider } from './contexts/TicketContext';
+import { AuthProvider } from "../contexts/AuthContext";
+import { TicketProvider } from "../contexts/TicketContext";
 import { useRouter } from "expo-router";
 
 export default function Layout() {

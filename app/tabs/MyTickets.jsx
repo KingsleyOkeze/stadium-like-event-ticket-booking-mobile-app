@@ -1,6 +1,6 @@
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 import axios from 'axios';
 
 function MyTicketsScreen() {

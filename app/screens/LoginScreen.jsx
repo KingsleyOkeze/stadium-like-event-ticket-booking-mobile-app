@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useRouter, Link } from "expo-router";
 import axios from "axios";
-import { AuthContext } from "../contexts/AuthContext"; // adjust path as needed
+import { AuthContext } from "../../contexts/AuthContext"; // adjust path as needed
 
 function LoginScreen() {
   const router = useRouter();
@@ -31,15 +31,16 @@ function LoginScreen() {
       });
 
       if (response.status === 200) {
-        const { token, userId } = response.data;
+        const { token, userId, firstName, lastName } = response.data;
 
         // Save to context + AsyncStorage
-        await login({ token, userId, email });
+        await login({ token, userId, email, firstName, lastName });
 
         router.replace("/tabs/Home"); // or "/tabs" depending on your setup
       }
     } catch (error) {
-      console.error("Login error:", error.response?.data);
+      console.error("Login request error:", error.request);
+      console.error("Login response error:", error.response?.data.error);
       Alert.alert(
         "Login Failed",
         error.response?.data?.error || "Something went wrong.",

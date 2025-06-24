@@ -10,8 +10,8 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
-import { AuthContext } from "../contexts/AuthContext";
-import { TicketContext } from "../contexts/TicketContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { TicketContext } from "../../contexts/TicketContext";
 
 function EventDetailsScreen() {
     const route = useLocalSearchParams();

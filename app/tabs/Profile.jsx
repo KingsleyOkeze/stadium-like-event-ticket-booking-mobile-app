@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 function ProfileScreen() {
     const { user, logout } = useContext(AuthContext);
@@ -12,7 +12,7 @@ function ProfileScreen() {
             <View style={styles.body}>
                 {user ? (
                     <View style={styles.card}>
-                        <Text style={styles.label}>Full Name</Text>
+                        <Text style={styles.label}>{user.firstName} {user.lastName}</Text>
                         <Text style={styles.value}>
                             {user.firstName || "N/A"} {user.lastName || ""}
                         </Text>

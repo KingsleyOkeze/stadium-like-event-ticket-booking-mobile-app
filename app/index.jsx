@@ -8,10 +8,10 @@ axios.defaults.baseURL = process.env.EXPO_PUBLIC_SERVER_URL;
 
 function Index() {
 
-  //  useEffect(() => {
-  //   console.log("log effect")
-  //   console.log("Base server url is", process.env.EXPO_PUBLIC_SERVER_URL)
-  // }, [])
+   useEffect(() => {
+    console.log("log effect")
+    console.log("Base server url is", process.env.EXPO_PUBLIC_SERVER_URL)
+  }, [])
 
   return (
     <Redirect href="/screens/LoginScreen" />

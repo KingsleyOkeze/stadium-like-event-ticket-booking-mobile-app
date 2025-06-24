@@ -1,78 +1,69 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera'; // Correct import!
-import { AuthContext } from '../contexts/AuthContext';
-import { TicketContext } from '../contexts/TicketContext';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { AuthContext } from '../../contexts/AuthContext';
+import { TicketContext } from '../../contexts/TicketContext';
 
 export default function ScannerScreen() {
     const { user } = useContext(AuthContext);
     const { handleBooking } = useContext(TicketContext);
-    const [email, setEmail] = useState("")
-    const [token, setToken] = useState("")
-    // Use useCameraPermissions hook for a cleaner way to handle permissions
-    const [cameraPermission, requestCameraPermission] = useCameraPermissions();
+    const [email, setEmail] = useState('');
+    const [token, setToken] = useState('');
+    const [facing, setFacing] = useState('back');
+    const [permission, requestPermission] = useCameraPermissions();
     const [scanned, setScanned] = useState(false);
-    const [scannedData, setScannedData] = useState(''); // To store scanned data
+    const [scannedData, setScannedData] = useState('');
 
-    // No need for useEffect just for permissions with useCameraPermissions,
-    // you can trigger it based on UI interaction if permission is not granted.
-    // However, keeping it here for initial request is fine too.
-    useEffect(() => {
-        if (!cameraPermission?.granted) {
-            requestCameraPermission(); // Request on mount if not granted
-        }
-    }, [cameraPermission]);
-
+    // Update email and token when user changes
     useEffect(() => {
         if (user) {
-            const { token, userId, email } = user;
-            setEmail(email)
-            setToken(token);
+            setEmail(user.email);
+            setToken(user.token);
         }
     }, [user]);
 
+    // When scannedData, token, and email are available, trigger booking
     useEffect(() => {
         if (scannedData && token && email) {
             handleBooking(scannedData, email, token);
         }
     }, [scannedData, token, email]);
 
-    const handleBarCodeScanned = ({ type, data }) => { // type is also available here
+    // Handle barcode scanned event
+    const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        setScannedData(data); // Store the data
-        Alert.alert("QR Scanned", `Scanned QR content: ${data}`);
-        // TODO: decode data (eventId) and make ticket booking API call
+        setScannedData(data);
+        Alert.alert('QR Scanned', `Scanned QR content: ${data}`);
     };
 
-
-    if (!cameraPermission) {
-        // Camera permissions are still loading
-        return <Text>Requesting camera permission...</Text>;
+    if (!permission) {
+        return <View />;
     }
 
-    if (!cameraPermission.granted) {
-        // Camera permissions are not granted yet
+    if (!permission.granted) {
         return (
             <View style={styles.container}>
                 <Text style={{ textAlign: 'center' }}>
                     We need your permission to show the camera
                 </Text>
-                <Button onPress={requestCameraPermission} title="Grant Permission" />
+                <Button
+                    title="Grant Permission"
+                    onPress={requestPermission}
+                />
             </View>
         );
     }
 
-    
-
     return (
         <View style={styles.container}>
             <View style={styles.scannerWrapper}>
-                <CameraView // Use CameraView instead of Camera
+                <CameraView
+                    style={StyleSheet.absoluteFill}
+                    facing={facing}
                     onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
                     barcodeScannerSettings={{
-                        barcodeTypes: ['qr'], // Only scan QR codes
+                        barcodeTypes: ["qr"],
                     }}
-                    style={StyleSheet.absoluteFillObject}
                 />
             </View>
             {scanned && (
@@ -88,13 +79,13 @@ export default function ScannerScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     scannerWrapper: {
         flex: 1,
-        overflow: 'hidden',
         margin: 20,
-        borderRadius: 12
+        borderRadius: 12,
+        overflow: 'hidden',
     },
     scanResultOverlay: {
         position: 'absolute',

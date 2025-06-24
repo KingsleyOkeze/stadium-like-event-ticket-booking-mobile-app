@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const TABS = ["Upcoming", "Ongoing", "Completed"];
 
